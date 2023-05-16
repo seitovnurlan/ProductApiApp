@@ -22,6 +22,7 @@ class NetworkLayer {
             if let data = data {
                 do {
                     let model = try JSONDecoder().decode(DataModel.self, from: data)
+                   
                     completion(.success(model))
                 }
                 catch let error {

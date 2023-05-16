@@ -123,6 +123,7 @@
                     <connections>
                         <outlet property="collectionViewCateg" destination="LH5-hu-QhS" id="YUS-ig-gV5"/>
                         <outlet property="collectionViewType" destination="OAV-oR-zUw" id="UT2-T7-nQq"/>
+                        <outlet property="countLabel" destination="gdS-e3-tO9" id="whv-F5-I16"/>
                         <outlet property="tableView" destination="FlR-vY-AwG" id="FOG-8t-jQl"/>
                     </connections>
                 </viewController>

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class CustomTabCell: UITableViewCell {
 
@@ -35,7 +36,7 @@ class CustomTabCell: UITableViewCell {
     
     public func initUI(image: String, brand: String, open: String, rait: String, country: String, time: String,
                        product: String, delivery: String, rent: String, distance: String) {
-        imageCustTab.image = UIImage(named: image)
+        imageCustTab.kf.setImage(with: URL(string: image))
         brandLabel.text = brand
         openLabel.text = open
         raitLabel.text = rait

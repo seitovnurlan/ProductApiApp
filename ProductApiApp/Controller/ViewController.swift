@@ -34,6 +34,9 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
+    @IBOutlet weak var countLabel: UILabel!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -63,6 +66,7 @@ class ViewController: UIViewController {
     }
     
     private func setuptableView() {
+        
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UINib(nibName: CustomTabCell.nibName, bundle: nil), forCellReuseIdentifier: CustomTabCell.reuseId)
@@ -80,6 +84,8 @@ class ViewController: UIViewController {
                 DispatchQueue.main.async {
                     guard let `self` else {return}
                     self.data = data.products ?? []
+//                    print(String(decoding: data, as: UTF8.self))
+//                    print(data.products?.count)
                     self.tableView.reloadData()
 //                    let vc = GetRequestPage()
 //                    vc.data = data.products ?? []
@@ -157,22 +163,46 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
 }
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        data.count
+        countLabel.text = String(data.count)
+       return data.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CustomTabCell") as? CustomTabCell
-//        let value = data[indexPath.row]
-//        cell?.imageCustTab.image = UIImage(named: data[indexPath.row].thumbnail ?? "")
-//        cell?.imageCustTab.image = UIImage(named: data[indexPath.row].thumbnail ?? "")
+//         let cell = tableView.dequeueReusableCell(withIdentifier: CustomTabCell.reuseId, for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CustomTabCell.reuseId, for: indexPath)
+                as? CustomTabCell
+        else { return UITableViewCell() }
         
-        cell?.brandLabel.text = data[indexPath.row].title
-        cell?.productLabel.text = data[indexPath.row].description
-        return cell!
+        cell.initUI(
+            image: data[indexPath.row].thumbnail ?? "",
+            brand: data[indexPath.row].title ?? "",
+            open: "OPEN",
+            rait: String(data[indexPath.row].rating ?? 0.0),
+            country: data[indexPath.row].brand ?? "",
+            time: "15-20 min",
+            product: data[indexPath.row].category ?? "",
+            delivery: "Delivery: FREE",
+            rent: String(data[indexPath.row].price ?? 0),
+            distance: "1.5 km away")
+//        String(data[indexPath.row].discountPercentage ?? 0.0)
+//        String(data[indexPath.row].stock ?? 0)
+        
+        cell.imageCustTab.layer.cornerRadius = 5
+        cell.imageCustTab.layer.borderWidth = 2
+        cell.imageCustTab.layer.borderColor = UIColor.gray.cgColor
+        
+//        let value = data[indexPath.row]
+//        cell.imageCustTab.image = UIImage(named: data[indexPath.row].thumbnail ?? "")
+//
+//        cell.brandLabel.text = data[indexPath.row].title
+//        cell.productLabel.text = data[indexPath.row].description
+        
+        
+        return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 130
+        return 320
     }
     
 }
