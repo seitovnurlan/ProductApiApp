@@ -11,7 +11,7 @@ import Kingfisher
 
 class ViewController: UIViewController {
     
-    var data: [Product] = []
+var data: [Product] = []
     
     private let categoriesImage = [
         UIImage(named: "scooter2")!,
@@ -35,6 +35,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var countLabel: UILabel!
+    
     
     
     override func viewDidLoad() {
@@ -169,7 +170,6 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
        
-//         let cell = tableView.dequeueReusableCell(withIdentifier: CustomTabCell.reuseId, for: indexPath)
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CustomTabCell.reuseId, for: indexPath)
                 as? CustomTabCell
         else { return UITableViewCell() }
@@ -185,19 +185,10 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
             delivery: "Delivery: FREE",
             rent: String(data[indexPath.row].price ?? 0),
             distance: "1.5 km away")
-//        String(data[indexPath.row].discountPercentage ?? 0.0)
-//        String(data[indexPath.row].stock ?? 0)
         
         cell.imageCustTab.layer.cornerRadius = 5
         cell.imageCustTab.layer.borderWidth = 2
         cell.imageCustTab.layer.borderColor = UIColor.gray.cgColor
-        
-//        let value = data[indexPath.row]
-//        cell.imageCustTab.image = UIImage(named: data[indexPath.row].thumbnail ?? "")
-//
-//        cell.brandLabel.text = data[indexPath.row].title
-//        cell.productLabel.text = data[indexPath.row].description
-        
         
         return cell
     }
