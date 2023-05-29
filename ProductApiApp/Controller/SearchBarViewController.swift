@@ -35,40 +35,40 @@ class SearchBarViewController: UIViewController {
         tableViewSearch.delegate = self
         searchBar.delegate = self
         tableViewSearch.register(UINib(nibName: CustomTabCell.nibName, bundle: nil), forCellReuseIdentifier: CustomTabCell.reuseId)
-//        loadApiawait()
-        loadApi()
+        loadApiawait()
+//        loadApi()
     }
-    private func loadApi() {
-
-        let networkLayer = NetworkLayer()
-        networkLayer.requestDataModel { [weak self] result in
-            switch result {
-            case .success(let data):
-                DispatchQueue.main.async {
-                    guard let `self` else {return}
-                    self.dataProduct = data.products ?? []
-                    self.tableViewSearch.reloadData()
-                }
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-//    private func loadApiawait() {
+//    private func loadApi() {
 //
-//        Task {
-//            do {
-//                let response = try await networkLayer.requestDataModel()
+//        let networkLayer = NetworkLayer()
+//        networkLayer.requestDataModel { [weak self] result in
+//            switch result {
+//            case .success(let data):
 //                DispatchQueue.main.async {
-//                    self.dataProduct = response.products
+//                    guard let `self` else {return}
+//                    self.dataProduct = data.products ?? []
 //                    self.tableViewSearch.reloadData()
 //                }
-//            } catch {
+//            case .failure(let error):
 //                print(error.localizedDescription)
 //            }
 //        }
 //    }
+    
+    private func loadApiawait() {
+
+        Task {
+            do {
+                let response = try await networkLayer.requestDataModel()
+                DispatchQueue.main.async {
+                    self.dataProduct = response.products
+                    self.tableViewSearch.reloadData()
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
 }
 extension SearchBarViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

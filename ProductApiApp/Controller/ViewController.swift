@@ -83,40 +83,40 @@ class ViewController: UIViewController {
         
 //        tableView.backgroundColor = .systemGray5
         tableView.backgroundColor = .white
-//        loadApiawait()
-        loadApi()
+        loadApiawait()
+//        loadApi()
     }
-    private func loadApi() {
-
-        let networkLayer = NetworkLayer()
-        networkLayer.requestDataModel { [weak self] result in
-            switch result {
-            case .success(let data):
-                DispatchQueue.main.async {
-                    guard let `self` else {return}
-                    self.data = data.products ?? []
-                    self.tableView.reloadData()
-                }
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-//    private func loadApiawait() {
+//    private func loadApi() {
 //
-//        Task {
-//            do {
-//                let response = try await networkLayer.requestDataModel()
+//        let networkLayer = NetworkLayer()
+//        networkLayer.requestDataModel { [weak self] result in
+//            switch result {
+//            case .success(let data):
 //                DispatchQueue.main.async {
-//                    self.data = response.products
+//                    guard let `self` else {return}
+//                    self.data = data.products ?? []
 //                    self.tableView.reloadData()
 //                }
-//            } catch {
+//            case .failure(let error):
 //                print(error.localizedDescription)
 //            }
 //        }
 //    }
+    
+    private func loadApiawait() {
+
+        Task {
+            do {
+                let response = try await networkLayer.requestDataModel()
+                DispatchQueue.main.async {
+                    self.data = response.products
+                    self.tableView.reloadData()
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
     
 }
 
