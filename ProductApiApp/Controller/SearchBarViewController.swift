@@ -8,8 +8,9 @@
 import UIKit
 
 class SearchBarViewController: UIViewController {
-
-    var data: [Product] = []
+    
+    private let networkLayer = NetworkLayer()
+    private var dataProduct: [Product] = []
     
     @IBOutlet weak var searchBar: UISearchBar!
     
@@ -21,30 +22,31 @@ class SearchBarViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setupConfig()
         
     }
     
     // MARK: - Methods
-
+    
     private func setupConfig() {
         searchBar.placeholder = "Поиск"
         tableViewSearch.dataSource = self
         tableViewSearch.delegate = self
         searchBar.delegate = self
         tableViewSearch.register(UINib(nibName: CustomTabCell.nibName, bundle: nil), forCellReuseIdentifier: CustomTabCell.reuseId)
+//        loadApiawait()
         loadApi()
     }
     private func loadApi() {
-        
+
         let networkLayer = NetworkLayer()
         networkLayer.requestDataModel { [weak self] result in
             switch result {
             case .success(let data):
                 DispatchQueue.main.async {
                     guard let `self` else {return}
-                    self.data = data.products ?? []
+                    self.dataProduct = data.products ?? []
                     self.tableViewSearch.reloadData()
                 }
             case .failure(let error):
@@ -52,11 +54,26 @@ class SearchBarViewController: UIViewController {
             }
         }
     }
+    
+//    private func loadApiawait() {
+//
+//        Task {
+//            do {
+//                let response = try await networkLayer.requestDataModel()
+//                DispatchQueue.main.async {
+//                    self.dataProduct = response.products
+//                    self.tableViewSearch.reloadData()
+//                }
+//            } catch {
+//                print(error.localizedDescription)
+//            }
+//        }
+//    }
 }
 extension SearchBarViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        isFiltered ? filteredProduct.count : data.count
+        isFiltered ? filteredProduct.count : dataProduct.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -65,15 +82,15 @@ extension SearchBarViewController: UITableViewDataSource, UITableViewDelegate {
         else { return UITableViewCell() }
         
         cell.initUI(
-            image: data[indexPath.row].thumbnail ?? "",
-            brand: data[indexPath.row].title ?? "",
+            image: dataProduct[indexPath.row].thumbnail ?? "",
+            brand: dataProduct[indexPath.row].title ?? "",
             open: "OPEN",
-            rait: String(data[indexPath.row].rating ?? 0.0),
-            country: data[indexPath.row].brand ?? "",
+            rait: String(dataProduct[indexPath.row].rating ?? 0.0),
+            country: dataProduct[indexPath.row].brand ?? "",
             time: "15-20 min",
-            product: data[indexPath.row].category ?? "",
+            product: dataProduct[indexPath.row].category ?? "",
             delivery: "Delivery: FREE",
-            rent: String(data[indexPath.row].price ?? 0),
+            rent: String(dataProduct[indexPath.row].price ?? 0),
             distance: "1.5 km away")
         
         cell.imageCustTab.layer.cornerRadius = 5
@@ -90,8 +107,8 @@ extension SearchBarViewController: UITableViewDataSource, UITableViewDelegate {
          }
          else
          {
-             cell.productLabel?.text = data[indexPath.row].category
-             cell.imageCustTab?.image = UIImage(named: data[indexPath.row].thumbnail ?? "")
+             cell.productLabel?.text = dataProduct[indexPath.row].category
+             cell.imageCustTab?.image = UIImage(named: dataProduct[indexPath.row].thumbnail ?? "")
              cell.layer.cornerRadius = 10
              cell.layer.borderWidth = 1
              cell.layer.borderColor = UIColor.white.cgColor
@@ -114,7 +131,7 @@ extension SearchBarViewController: UISearchBarDelegate {
             
             // filteredStudents = students.filter { $0.contains(searchText)
           //  filteredUsers = users.filter { $0.lowercased().contains(searchText.lowercased())
-            filteredProduct = data.filter { $0.category!.lowercased().contains(searchText.lowercased()) }
+            filteredProduct = dataProduct.filter { $0.category!.lowercased().contains(searchText.lowercased()) }
           //  filteredUsers = users.filter { $0.imageOne }
             
         }

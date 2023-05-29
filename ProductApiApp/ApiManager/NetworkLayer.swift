@@ -14,7 +14,7 @@ class NetworkLayer {
     
     func requestDataModel(completion: @escaping (Result<DataModel, Error>) -> Void) {
         let request = URLRequest(url: baseURL)
-        
+
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                     completion(.failure(error))
@@ -22,7 +22,7 @@ class NetworkLayer {
             if let data = data {
                 do {
                     let model = try JSONDecoder().decode(DataModel.self, from: data)
-                   
+
                     completion(.success(model))
                 }
                 catch let error {
@@ -31,6 +31,15 @@ class NetworkLayer {
             }
         }
         .resume()
+    }
+    
+//    func requestDataModel() async throws -> DataModel {
+//        let request = URLRequest(url: baseURL)
+//        let (data, _) = try await URLSession.shared.data(for: request)
+//        return try self.decode(data: data)
+//    }
+    private func decode<T: Decodable>(data: Data) throws -> T {
+        return try JSONDecoder().decode(T.self, from: data)
     }
 }
 

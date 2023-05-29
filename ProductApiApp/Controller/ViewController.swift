@@ -11,7 +11,13 @@ import Kingfisher
 
 class ViewController: UIViewController {
     
-var data: [Product] = []
+    private let networkLayer = NetworkLayer()
+    var data: [Product] = [] {
+        didSet {
+            categories = Array(Set(data.map { $0.category ?? "Empty category" }))
+            collectionViewType.reloadData()
+        }
+    }
     
     private let categoriesImage = [
         UIImage(named: "scooter2")!,
@@ -28,6 +34,8 @@ var data: [Product] = []
     private let titleCategoriArray = ["Delivery", "Pickup", "Catering", "Curbside"]
     private let titleTypeOfDeliveryArray = ["Takeaways", "Grocery", "Convenience", "Pharmacy"]
     
+    private var categories: [String] = []
+    
     @IBOutlet weak var collectionViewCateg: UICollectionView!
     
     @IBOutlet weak var collectionViewType: UICollectionView!
@@ -37,6 +45,7 @@ var data: [Product] = []
     @IBOutlet weak var countLabel: UILabel!
     
     
+    @IBOutlet weak var searchBarVC: UISearchBar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,10 +83,11 @@ var data: [Product] = []
         
 //        tableView.backgroundColor = .systemGray5
         tableView.backgroundColor = .white
+//        loadApiawait()
         loadApi()
     }
     private func loadApi() {
-        
+
         let networkLayer = NetworkLayer()
         networkLayer.requestDataModel { [weak self] result in
             switch result {
@@ -85,27 +95,38 @@ var data: [Product] = []
                 DispatchQueue.main.async {
                     guard let `self` else {return}
                     self.data = data.products ?? []
-//                    print(String(decoding: data, as: UTF8.self))
-//                    print(data.products?.count)
                     self.tableView.reloadData()
-//                    let vc = GetRequestPage()
-//                    vc.data = data.products ?? []
-//                     self.navigationController?.pushViewController(vc, animated: true)
                 }
             case .failure(let error):
                 print(error.localizedDescription)
             }
         }
     }
+    
+//    private func loadApiawait() {
+//
+//        Task {
+//            do {
+//                let response = try await networkLayer.requestDataModel()
+//                DispatchQueue.main.async {
+//                    self.data = response.products
+//                    self.tableView.reloadData()
+//                }
+//            } catch {
+//                print(error.localizedDescription)
+//            }
+//        }
+//    }
+    
 }
 
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,numberOfItemsInSection section: Int) -> Int {
         
         if collectionView == collectionViewType {
-            return titleTypeOfDeliveryArray.count
+            return categories.count
         } else {
-                return titleCategoriArray.count
+            return titleCategoriArray.count
         }
     }
     
@@ -139,11 +160,11 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
             //        cell.layer.borderWidth = 2
             //        cell.layer.borderColor = UIColor.red.cgColor
 //            cell.backgroundColor = .white
-            cell.imageView.image = typeOfImages[indexPath.row]
+//            cell.imageView.image = typeOfImages[indexPath.row]
             //        cell.imageView.tintColor = .red
             //        cell.imageView.image?.withTintColor(.blue)
             //        cell.imageView.layer.backgroundColor = UIColor.green.cgColor
-            cell.titleLabel.text = titleTypeOfDeliveryArray[indexPath.row]
+            cell.titleLabel.text = categories[indexPath.row]
             cell.titleLabel.textColor = UIColor(named: "textColor")
             
             return cell

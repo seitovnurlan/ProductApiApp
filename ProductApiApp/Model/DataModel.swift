@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Datamodel
 struct DataModel: Codable {
-    let products: [Product]?
+    let products: [Product]
     let empty, skip, limit: Int?
 
     enum CodingKeys: String, CodingKey {
