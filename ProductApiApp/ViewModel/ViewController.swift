@@ -12,8 +12,10 @@ import Kingfisher
 class ViewController: UIViewController {
     
     private let networkLayer = NetworkLayer()
+    var dataCategory: [DataModel] = []
     var data: [Product] = [] {
         didSet {
+            
             categories = Array(Set(data.map { $0.category ?? "Empty category" }))
             collectionViewType.reloadData()
         }
@@ -26,13 +28,31 @@ class ViewController: UIViewController {
         UIImage(named: "curbside2")!,
     ]
     private let typeOfImages = [
-        UIImage(named: "Takeaways")!,
-        UIImage(named: "Grocery")!,
-        UIImage(named: "Convenience")!,
-        UIImage(named: "Pharmacy")!,
+        "takeaways",
+        "grocery",
+        "convenience",
+        "pharmacy",
+        "laptops2",
+        "skincare2",
+        "home-decoration2",
+        "fragrances2",
+        "smartphones2"
     ]
     private let titleCategoriArray = ["Delivery", "Pickup", "Catering", "Curbside"]
-    private let titleTypeOfDeliveryArray = ["Takeaways", "Grocery", "Convenience", "Pharmacy"]
+//    private let titleTypeOfDeliveryArray = ["Takeaways", "Grocery", "Convenience", "Pharmacy"]
+    
+    private let categoriesStruct = [
+        Category(title: "Takeaways", image: "takeaways"),
+        Category(title: "Grocery", image: "grocery"),
+        Category(title: "Convenience", image: "convenience"),
+        Category(title: "Pharmacy", image: "pharmacy"),
+        Category(title: "Skincare", image: "skincare"),
+        Category(title: "Home-decoration", image: "home-decoration"),
+        Category(title: "Fragrances", image: "fragrances"),
+        Category(title: "Smartphones", image: "smartphones"),
+        Category(title: "Laptops", image: "laptops"),
+    ]
+    
     
     private var categories: [String] = []
     
@@ -46,6 +66,12 @@ class ViewController: UIViewController {
     
     
     @IBOutlet weak var searchBarVC: UISearchBar!
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loadApiawait()
+        collectionViewType.reloadData()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,11 +105,15 @@ class ViewController: UIViewController {
         
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(UINib(nibName: CustomTabCell.nibName, bundle: nil), forCellReuseIdentifier: CustomTabCell.reuseId)
+        tableView.register(UINib(
+            nibName: CustomTabCell.nibName,
+            bundle: nil),
+            forCellReuseIdentifier: CustomTabCell.reuseId
+        )
         
 //        tableView.backgroundColor = .systemGray5
         tableView.backgroundColor = .white
-        loadApiawait()
+       // loadApiawait()
 //        loadApi()
     }
 //    private func loadApi() {
@@ -109,7 +139,27 @@ class ViewController: UIViewController {
             do {
                 let response = try await networkLayer.requestDataModel()
                 DispatchQueue.main.async {
+        
                     self.data = response.products
+                    self.tableView.reloadData()
+                }
+            } catch {
+//                print(error.localizedDescription)
+                showAlert(with: error.localizedDescription)
+            }
+        }
+    }
+    
+    private func loadApiCategory(category: String) {
+
+        Task {
+            do {
+                let response = try await networkLayer.requestDataModel()
+                DispatchQueue.main.async {
+        
+                    self.data = response.products.filter({
+                        $0.category == category
+                    })
                     self.tableView.reloadData()
                 }
             } catch {
@@ -121,12 +171,16 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView,numberOfItemsInSection section: Int) -> Int {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection section: Int
+    ) -> Int {
         
         if collectionView == collectionViewType {
             return categories.count
         } else {
             return titleCategoriArray.count
+            
         }
     }
     
@@ -157,17 +211,20 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
                 return UICollectionViewCell()
             }
             cell.layer.cornerRadius = 10
-            //        cell.layer.borderWidth = 2
-            //        cell.layer.borderColor = UIColor.red.cgColor
+//            cell.layer.borderWidth = 2
+//            cell.layer.borderColor = UIColor.red.cgColor
 //            cell.backgroundColor = .white
-//            cell.imageView.image = typeOfImages[indexPath.row]
-            //        cell.imageView.tintColor = .red
-            //        cell.imageView.image?.withTintColor(.blue)
-            //        cell.imageView.layer.backgroundColor = UIColor.green.cgColor
-            cell.titleLabel.text = categories[indexPath.row]
-            cell.titleLabel.textColor = UIColor(named: "textColor")
             
-            return cell
+                
+//                cell.imageView.tintColor = .red
+//                cell.imageView.image?.withTintColor(.blue)
+//                cell.imageView.layer.backgroundColor = UIColor.white.cgColor
+            
+                cell.titleLabel.text = categories[indexPath.row]
+                cell.titleLabel.textColor = UIColor(named: "textColor")
+                cell.imageView.image = UIImage(named:"\(categories[indexPath.row])")
+        
+                return cell
         }
     }
     
@@ -179,8 +236,13 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
             print("collectionViewCateg \(indexPath.item)")
         }
         if collectionView == collectionViewType {
+            
             print("collectionViewType \(indexPath.item)")
+//            print(categories)
+            loadApiCategory(category: categories[indexPath.row])
+            
         }
+        
     }
 }
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
@@ -218,3 +280,21 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
 }
+
+//let json = """
+//[{
+//"title": "Grocery"
+//},
+//{
+//"title": "Grocery"
+//},
+//{
+//"title": "Grocery"
+//},
+//{
+//"title": "Grocery"
+//},
+//{
+//"title": "Grocery"
+//}]
+//"""

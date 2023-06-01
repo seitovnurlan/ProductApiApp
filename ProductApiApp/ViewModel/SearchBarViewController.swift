@@ -119,6 +119,8 @@ extension SearchBarViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         320
     }
+    
+    
 }
 
 extension SearchBarViewController: UISearchBarDelegate {
