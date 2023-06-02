@@ -34,9 +34,22 @@ class CustomTabCell: UITableViewCell {
     static let reuseId = String(describing: CustomTabCell.self)
     static let nibName = String(describing: CustomTabCell.self)
     
-    public func initUI(image: String, brand: String, open: String, rait: String, country: String, time: String,
-                       product: String, delivery: String, rent: String, distance: String) {
-        imageCustTab.kf.setImage(with: URL(string: image))
+    public func initUI(image: String, brand: String, open: String,
+                       rait: String, country: String, time: String,
+                       product: String, delivery: String, rent: String,
+                       distance: String)
+    {
+        DispatchQueue.global(qos: .userInitiated).async {
+            guard let data = try? Data(
+                contentsOf: URL(string: image)!
+            ) else {
+                return
+            }
+            DispatchQueue.main.async {
+                self.imageCustTab.image = UIImage(data: data)
+            }
+        }
+//        imageCustTab.kf.setImage(with: URL(string: image))
         brandLabel.text = brand
         openLabel.text = open
         raitLabel.text = rait
