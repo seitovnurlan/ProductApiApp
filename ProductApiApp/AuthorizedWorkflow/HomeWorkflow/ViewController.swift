@@ -72,13 +72,19 @@ class ViewController: UIViewController {
         
         print("Product title is: \(String(describing: UserdefaultStorage.shared.getString(forKey: .titleName)))")
         
-        let data = KeyChainStorage.shared.read(
+        let data: Any? = KeyChainStorage.shared.read(
             with: Constants.Keychain.service,
             Constants.Keychain.account
         )
-        if let data {
-            print("Model is: \(String(data: data, encoding: .utf8))")
-        }
+              print("model is: \(data!)")
+        
+//        let data = KeyChainStorage.shared.read(
+//            with: Constants.Keychain.service,
+//            Constants.Keychain.account
+//        )
+//        if let data {
+//            print("Model is: \(String(data: data, encoding: .utf8))")
+//        }
     }
     
     private func setupCollViewCategor() {
@@ -229,9 +235,10 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
             model.title,
             forKey: .titleName
         )
-        let data = try! JSONEncoder().encode(model)
+//        let data = try! JSONEncoder().encode(model)
         KeyChainStorage.shared.save(
-            data,
+//            data,
+            model,
             service: Constants.Keychain.service,
             account: Constants.Keychain.account
         )
