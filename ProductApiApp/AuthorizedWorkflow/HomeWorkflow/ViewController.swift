@@ -32,7 +32,7 @@ class ViewController: UIViewController {
 //                categories.map { Category(title: item, image: $0.image)}
 //            }
 //            categoryCollectionView.reloadData()
-        }
+         }
     }
     
      let deliveries = [
@@ -69,6 +69,16 @@ class ViewController: UIViewController {
         setupCollViewCategor()
         setupCollViewType()
         setuptableView()
+        
+        print("Product title is: \(String(describing: UserdefaultStorage.shared.getString(forKey: .titleName)))")
+        
+        let data = KeyChainStorage.shared.read(
+            with: Constants.Keychain.service,
+            Constants.Keychain.account
+        )
+        if let data {
+            print("Model is: \(String(data: data, encoding: .utf8))")
+        }
     }
     
     private func setupCollViewCategor() {
@@ -212,7 +222,20 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 320
     }
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let model = products[indexPath.row]
+        UserdefaultStorage.shared.save(
+            model.title,
+            forKey: .titleName
+        )
+        let data = try! JSONEncoder().encode(model)
+        KeyChainStorage.shared.save(
+            data,
+            service: Constants.Keychain.service,
+            account: Constants.Keychain.account
+        )
+    }
 }
 
 //let json = """

@@ -7,10 +7,8 @@ import Foundation
 
 class NetworkLayer {
     
-    private let baseURL = URL(string: "https://dummyjson.com/products/")!
-    
     func fetchProducts() async throws -> Products {
-        let request = URLRequest(url: baseURL)
+        let request = URLRequest(url: Constants.API.baseURL)
         let (data, _) = try await URLSession.shared.data(for: request)
         return try self.decode(data: data)
     }
