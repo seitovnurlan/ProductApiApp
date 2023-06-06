@@ -98,9 +98,9 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Home" image="house" catalog="system" id="cvQ-yn-McT"/>
                     <connections>
-                        <outlet property="collectionViewCateg" destination="LH5-hu-QhS" id="YUS-ig-gV5"/>
-                        <outlet property="collectionViewType" destination="OAV-oR-zUw" id="UT2-T7-nQq"/>
+                        <outlet property="categoryCollectionView" destination="OAV-oR-zUw" id="8KB-KA-o5B"/>
                         <outlet property="countLabel" destination="gdS-e3-tO9" id="whv-F5-I16"/>
+                        <outlet property="deliveryCollectionView" destination="LH5-hu-QhS" id="Ze3-2Y-kBx"/>
                         <outlet property="searchBarVC" destination="zBC-Fc-tfs" id="kKp-bf-RLB"/>
                         <outlet property="tableView" destination="FlR-vY-AwG" id="FOG-8t-jQl"/>
                     </connections>

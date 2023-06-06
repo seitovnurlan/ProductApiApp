@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Datamodel
-struct DataModel: Codable {
+struct Products: Codable {
     let products: [Product]
     let empty, skip, limit: Int?
 
