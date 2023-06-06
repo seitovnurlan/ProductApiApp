@@ -31,8 +31,11 @@ enum Constants {
         static let size56 = 56.0
     }
     enum Keychain {
-        static let service = "FACEBOOK"
-        static let account = "12345"
+        static let service = "PhoneAuth"
+        static let account = "phoneSigin"
+    }
+    enum Auth {
+        static let verificationId = "vID"
     }
 }
 

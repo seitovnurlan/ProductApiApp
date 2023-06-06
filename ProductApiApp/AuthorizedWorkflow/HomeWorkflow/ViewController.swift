@@ -72,11 +72,11 @@ class ViewController: UIViewController {
         
         print("Product title is: \(String(describing: UserdefaultStorage.shared.getString(forKey: .titleName)))")
         
-        let data: Any? = KeyChainStorage.shared.read(
-            with: Constants.Keychain.service,
-            Constants.Keychain.account
-        )
-              print("model is: \(data!)")
+//        let data: Any? = KeyChainStorage.shared.read(
+//            with: Constants.Keychain.service,
+//            Constants.Keychain.account
+//        )
+//              print("model is: \(data!)")
         
 //        let data = KeyChainStorage.shared.read(
 //            with: Constants.Keychain.service,
@@ -236,12 +236,12 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
             forKey: .titleName
         )
 //        let data = try! JSONEncoder().encode(model)
-        KeyChainStorage.shared.save(
-//            data,
-            model,
-            service: Constants.Keychain.service,
-            account: Constants.Keychain.account
-        )
+//        KeyChainStorage.shared.save(
+////            data,
+//            model,
+//            service: Constants.Keychain.service,
+//            account: Constants.Keychain.account
+//        )
     }
 }
 
